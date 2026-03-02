@@ -23,7 +23,18 @@ const ReceiverDashboard = () => {
 
     const getContactLink = (material) => {
         if (material.contactType === 'WhatsApp') {
-            return `https://wa.me/${material.contactValue.replace(/\D/g, '')}`;
+            let phone = material.contactValue.replace(/\D/g, ''); // Clear non-digits
+
+            // If starts with 07 and 10 digits (Jordan standard)
+            if (phone.startsWith('0') && phone.length === 10) {
+                phone = '962' + phone.substring(1);
+            }
+            // If starts with 7 and 9 digits (local without 0)
+            else if (phone.startsWith('7') && phone.length === 9) {
+                phone = '962' + phone;
+            }
+
+            return `https://wa.me/${phone}`;
         }
         return `https://instagram.com/${material.contactValue.replace('@', '')}`;
     };

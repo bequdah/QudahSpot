@@ -84,10 +84,23 @@ const GiverDashboard = () => {
         e.preventDefault();
 
         try {
+            // Sanitize WhatsApp number for Jordan
+            let processedMaterial = { ...newMaterial };
+            if (processedMaterial.contactType === 'WhatsApp') {
+                let digits = processedMaterial.contactValue.replace(/\D/g, '');
+                if (digits.startsWith('0') && digits.length === 10) {
+                    processedMaterial.contactValue = '+962' + digits.substring(1);
+                } else if (digits.startsWith('7') && digits.length === 9) {
+                    processedMaterial.contactValue = '+962' + digits;
+                } else if (digits.length === 12 && digits.startsWith('962')) {
+                    processedMaterial.contactValue = '+' + digits;
+                }
+            }
+
             if (editingId) {
-                await updateMaterial({ ...newMaterial, id: editingId });
+                await updateMaterial({ ...processedMaterial, id: editingId });
             } else {
-                await addMaterial(newMaterial);
+                await addMaterial(processedMaterial);
             }
             resetForm();
             window.scrollTo({ top: 0, behavior: 'smooth' });

@@ -79,8 +79,7 @@ const Login = () => {
                     </p>
                 </div>
 
-                <div className="mt-12 pt-8 border-t border-glass-border">
-                </div>
+
             </motion.div>
         </div>
     );
