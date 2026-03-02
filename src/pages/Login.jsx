@@ -80,9 +80,6 @@ const Login = () => {
                 </div>
 
                 <div className="mt-12 pt-8 border-t border-glass-border">
-                    <p className="text-text-muted text-xs leading-relaxed">
-                        By continuing, you agree to share your name and email with QudahSpot.
-                    </p>
                 </div>
             </motion.div>
         </div>

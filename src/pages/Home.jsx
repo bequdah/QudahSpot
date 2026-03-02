@@ -14,7 +14,8 @@ const Home = () => {
             </div>
 
             {/* ── CENTRAL HERO ── */}
-            <section className="container relative z-10 flex flex-col lg:flex-row items-center gap-16 py-20 lg:py-32">
+            <section className="container relative z-10 flex flex-col lg:flex-row items-center gap-16 pt-32 pb-20 lg:pt-48 lg:pb-32">
+
                 <div className="flex-1 text-center lg:text-left">
                     <div className="badge mb-8 inline-flex">University Material Exchange</div>
 
