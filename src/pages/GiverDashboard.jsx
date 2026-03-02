@@ -80,24 +80,21 @@ const GiverDashboard = () => {
         });
     };
 
-    const handleAddMaterial = (e) => {
+    const handleAddMaterial = async (e) => {
         e.preventDefault();
-        // Update user identity to the latest name used
-        setUserName(newMaterial.giver);
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('qudahspot_user_name', newMaterial.giver);
-        }
 
-        if (editingId) {
-            updateMaterial({ ...newMaterial, id: editingId });
-        } else {
-            const material = {
-                ...newMaterial,
-                id: Date.now(),
-            };
-            addMaterial(material);
+        try {
+            if (editingId) {
+                await updateMaterial({ ...newMaterial, id: editingId });
+            } else {
+                await addMaterial(newMaterial);
+            }
+            resetForm();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        } catch (error) {
+            console.error("Failed to post:", error);
+            alert("حدث خطأ أثناء النشر، حاول مرة أخرى.");
         }
-        resetForm();
     };
 
     const handleEdit = (material) => {
@@ -122,10 +119,11 @@ const GiverDashboard = () => {
     };
 
     return (
-        <div className="container">
+        <div className="container pt-12">
             <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
                 <div>
-                    <h1 className="text-3xl font-bold mb-2">Post Your <span className="text-primary">Material</span></h1>
+                    <h1 className="text-4xl font-black mb-2 tracking-tight">Post Your <span className="text-primary italic">Material</span></h1>
+                    <div className="h-1 w-24 bg-primary rounded-full mt-4" />
                 </div>
             </div>
 
