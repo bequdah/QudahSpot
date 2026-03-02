@@ -1,17 +1,22 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { materials as initialMaterials } from '../data/mockData';
+import { db } from '../firebase';
+import {
+    collection,
+    addDoc,
+    updateDoc,
+    deleteDoc,
+    doc,
+    onSnapshot,
+    query,
+    orderBy,
+    serverTimestamp
+} from 'firebase/firestore';
 
 const MaterialContext = createContext();
 
 export const MaterialProvider = ({ children }) => {
-    // Start with an empty list instead of mock data for a clean slate
-    const [allMaterials, setAllMaterials] = useState(() => {
-        if (typeof window !== 'undefined') {
-            const saved = localStorage.getItem('qudahspot_materials_v2'); // New key for clean slate
-            return saved ? JSON.parse(saved) : [];
-        }
-        return [];
-    });
+    const [allMaterials, setAllMaterials] = useState([]);
+    const [loading, setLoading] = useState(true);
 
     const [isAdmin, setIsAdmin] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -27,41 +32,82 @@ export const MaterialProvider = ({ children }) => {
         }
     };
 
+    // Real-time listener for materials
     useEffect(() => {
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('qudahspot_materials_v2', JSON.stringify(allMaterials));
+        const q = query(collection(db, "materials"), orderBy("createdAt", "desc"));
+
+        const unsubscribe = onSnapshot(q, (querySnapshot) => {
+            const materialsArray = [];
+            querySnapshot.forEach((doc) => {
+                materialsArray.push({ id: doc.id, ...doc.data() });
+            });
+            setAllMaterials(materialsArray);
+            setLoading(false);
+        }, (error) => {
+            console.error("Error fetching materials: ", error);
+            setLoading(false);
+        });
+
+        return () => unsubscribe();
+    }, []);
+
+    const addMaterial = async (newMaterial) => {
+        try {
+            const materialWithStatus = {
+                ...newMaterial,
+                approved: false,
+                createdAt: serverTimestamp()
+            };
+            await addDoc(collection(db, "materials"), materialWithStatus);
+        } catch (error) {
+            console.error("Error adding material: ", error);
         }
-    }, [allMaterials]);
-
-    const addMaterial = (newMaterial) => {
-        // New materials are NOT approved by default for moderation
-        const materialWithStatus = { ...newMaterial, approved: false };
-        setAllMaterials(prev => [materialWithStatus, ...prev]);
     };
 
-    const updateMaterial = (updatedMaterial) => {
-        setAllMaterials(prev => prev.map(m => m.id === updatedMaterial.id ? updatedMaterial : m));
+    const updateMaterial = async (updatedMaterial) => {
+        try {
+            const materialRef = doc(db, "materials", updatedMaterial.id);
+            const { id, ...data } = updatedMaterial;
+            await updateDoc(materialRef, data);
+        } catch (error) {
+            console.error("Error updating material: ", error);
+        }
     };
 
-    const deleteMaterial = (id) => {
-        setAllMaterials(prev => prev.filter(m => m.id !== id));
+    const deleteMaterial = async (id) => {
+        try {
+            await deleteDoc(doc(db, "materials", id));
+        } catch (error) {
+            console.error("Error deleting material: ", error);
+        }
     };
 
-    const approveMaterial = (id) => {
-        setAllMaterials(prev => prev.map(m =>
-            m.id === id ? { ...m, approved: true } : m
-        ));
+    const approveMaterial = async (id) => {
+        try {
+            const materialRef = doc(db, "materials", id);
+            await updateDoc(materialRef, { approved: true });
+        } catch (error) {
+            console.error("Error approving material: ", error);
+        }
     };
 
     const clearAllMaterials = () => {
-        if (typeof window !== 'undefined') {
-            localStorage.removeItem('qudahspot_materials_v2');
-        }
-        setAllMaterials([]);
+        // This is safe to keep as a UI-only reset if needed, but in Firestore we usually delete individually or use a script
+        console.warn("Clear all materials not implemented for Firestore for safety");
     };
 
     return (
-        <MaterialContext.Provider value={{ allMaterials, addMaterial, updateMaterial, deleteMaterial, approveMaterial, clearAllMaterials, isAdmin, toggleAdmin }}>
+        <MaterialContext.Provider value={{
+            allMaterials,
+            addMaterial,
+            updateMaterial,
+            deleteMaterial,
+            approveMaterial,
+            clearAllMaterials,
+            isAdmin,
+            toggleAdmin,
+            loading
+        }}>
             {children}
         </MaterialContext.Provider>
     );
