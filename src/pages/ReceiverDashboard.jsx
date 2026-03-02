@@ -138,6 +138,12 @@ const ReceiverDashboard = () => {
                             {/* Description */}
                             <p className="text-text-muted text-sm mb-6 line-clamp-3 leading-relaxed">{material.description}</p>
 
+                            {/* Contact Info (visible as fallback) */}
+                            <div className="flex items-center gap-2 text-xs text-text-muted bg-white/5 px-4 py-2.5 rounded-xl mb-4 border border-white/5">
+                                {material.contactType === 'WhatsApp' ? <Phone size={14} className="text-primary shrink-0" /> : <Instagram size={14} className="text-primary shrink-0" />}
+                                <span className="font-bold text-white/80 select-all">{material.contactValue}</span>
+                            </div>
+
                             {/* Contact Button */}
                             <a
                                 href={getContactLink(material)}
