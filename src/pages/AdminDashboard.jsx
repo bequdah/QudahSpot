@@ -128,28 +128,45 @@ const AdminDashboard = () => {
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-row lg:flex-col gap-3 justify-center lg:pt-8 min-w-[200px] relative z-20 isolate">
+                                    <div className="flex flex-row lg:flex-col gap-3 justify-center lg:pt-8 min-w-[200px] relative z-[50]" style={{ pointerEvents: 'auto' }}>
                                         {!material.approved && (
                                             <button
-                                                onClick={() => approveMaterial(material.id)}
-                                                className="flex-grow bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-green-500/20"
+                                                onClick={async (e) => {
+                                                    e.stopPropagation();
+                                                    try {
+                                                        await approveMaterial(material.id);
+                                                        alert('✅ Post approved!');
+                                                    } catch (err) {
+                                                        alert('❌ Error: ' + err.message);
+                                                    }
+                                                }}
+                                                className="flex-grow bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-green-500/20 cursor-pointer"
                                             >
                                                 <Check size={20} /> Approve Post
                                             </button>
                                         )}
 
                                         {confirmDeleteId === material.id ? (
-                                            <div className="flex items-center gap-2 bg-rose-500/10 p-1 rounded-xl animate-fade-in border border-rose-500/20">
-                                                <span className="text-[10px] font-bold text-rose-500 px-3 uppercase tracking-tighter">Sure?</span>
+                                            <div className="flex items-center gap-2 bg-rose-500/10 p-2 rounded-xl animate-fade-in border border-rose-500/20">
+                                                <span className="text-[10px] font-bold text-rose-500 px-2 uppercase">Sure?</span>
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); deleteMaterial(material.id); setConfirmDeleteId(null); }}
-                                                    className="bg-rose-500 text-white text-[10px] font-bold px-3 py-2 rounded-lg hover:bg-rose-600 transition-colors"
+                                                    onClick={async (e) => {
+                                                        e.stopPropagation();
+                                                        try {
+                                                            await deleteMaterial(material.id);
+                                                            setConfirmDeleteId(null);
+                                                            alert('🗑️ Post deleted!');
+                                                        } catch (err) {
+                                                            alert('❌ Error: ' + err.message);
+                                                        }
+                                                    }}
+                                                    className="bg-rose-500 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-rose-600 transition-colors cursor-pointer"
                                                 >
-                                                    YES
+                                                    YES DELETE
                                                 </button>
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(null); }}
-                                                    className="bg-white/10 text-white text-[10px] font-bold px-3 py-2 rounded-lg hover:bg-white/20 transition-colors"
+                                                    className="bg-white/10 text-white text-xs font-bold px-4 py-2 rounded-lg hover:bg-white/20 transition-colors cursor-pointer"
                                                 >
                                                     NO
                                                 </button>
@@ -157,7 +174,7 @@ const AdminDashboard = () => {
                                         ) : (
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(material.id); }}
-                                                className="flex-grow bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white font-bold py-3 px-6 rounded-xl border border-rose-500/20 flex items-center justify-center gap-2 transition-all"
+                                                className="flex-grow bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white font-bold py-3 px-6 rounded-xl border border-rose-500/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
                                             >
                                                 <Trash2 size={20} /> {material.approved ? 'Delete Post' : 'Reject & Delete'}
                                             </button>
