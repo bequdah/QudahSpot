@@ -1,31 +1,22 @@
 import React, { useState } from 'react';
 import { useMaterials } from '../context/MaterialContext';
-import { useNavigate, Link } from 'react-router-dom';
-import { LogIn, UserPlus, Mail, Lock, User, ArrowRight, AlertCircle, Loader2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { LogIn, AlertCircle, Loader2 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
 const Login = () => {
-    const [isLogin, setIsLogin] = useState(true);
-    const [email, setEmail] = useState('');
-    const [password, setPassword] = useState('');
-    const [displayName, setDisplayName] = useState('');
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
 
-    const { login, signup } = useMaterials();
+    const { loginWithGoogle } = useMaterials();
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
-        e.preventDefault();
+    const handleGoogleLogin = async () => {
         setError('');
         setLoading(true);
 
         try {
-            if (isLogin) {
-                await login(email, password);
-            } else {
-                await signup(email, password, displayName);
-            }
+            await loginWithGoogle();
             navigate('/post'); // Redirect to posting page after success
         } catch (err) {
             setError(err.message.replace('Firebase: ', ''));
@@ -39,21 +30,17 @@ const Login = () => {
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 animate={{ opacity: 1, y: 0 }}
-                className="card max-w-md w-full p-8 md:p-12 relative overflow-hidden"
+                className="card max-w-md w-full p-12 text-center relative overflow-hidden"
             >
                 <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50" />
 
                 <div className="text-center mb-10">
-                    <div className="w-16 h-16 bg-primary/10 rounded-2xl flex items-center justify-center mx-auto mb-6 text-primary border border-primary/20">
-                        {isLogin ? <LogIn size={32} /> : <UserPlus size={32} />}
+                    <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8 text-primary border border-primary/20 shadow-2xl shadow-primary/10">
+                        <LogIn size={40} />
                     </div>
-                    <h1 className="text-3xl font-bold mb-2">
-                        {isLogin ? 'Welcome Back' : 'Create Account'}
-                    </h1>
-                    <p className="text-text-muted text-sm">
-                        {isLogin
-                            ? 'Sign in to manage and post your materials.'
-                            : 'Join QudahSpot to share knowledge with others.'}
+                    <h1 className="text-3xl font-bold mb-3">Welcome to <span className="text-primary italic">QudahSpot</span></h1>
+                    <p className="text-text-muted text-sm leading-relaxed max-w-xs mx-auto">
+                        Sign in with your university or personal Google account to start sharing and managing your materials.
                     </p>
                 </div>
 
@@ -63,7 +50,7 @@ const Login = () => {
                             initial={{ opacity: 0, height: 0 }}
                             animate={{ opacity: 1, height: 'auto' }}
                             exit={{ opacity: 0, height: 0 }}
-                            className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 mb-6 flex items-start gap-3 text-rose-500 text-sm"
+                            className="bg-rose-500/10 border border-rose-500/20 rounded-xl p-4 mb-8 flex items-start gap-3 text-rose-500 text-sm text-left"
                         >
                             <AlertCircle size={18} className="shrink-0 mt-0.5" />
                             <span>{error}</span>
@@ -71,82 +58,30 @@ const Login = () => {
                     )}
                 </AnimatePresence>
 
-                <form onSubmit={handleSubmit} className="space-y-5">
-                    {!isLogin && (
-                        <div className="space-y-2">
-                            <label className="text-xs font-bold text-text-muted uppercase tracking-wider ml-1">Full Name</label>
-                            <div className="relative">
-                                <User className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
-                                <input
-                                    required={!isLogin}
-                                    type="text"
-                                    placeholder="Ahmed Qudah"
-                                    className="pl-12"
-                                    value={displayName}
-                                    onChange={(e) => setDisplayName(e.target.value)}
-                                />
-                            </div>
-                        </div>
-                    )}
-
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold text-text-muted uppercase tracking-wider ml-1">Email Address</label>
-                        <div className="relative">
-                            <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
-                            <input
-                                required
-                                type="email"
-                                placeholder="name@example.com"
-                                className="pl-12"
-                                value={email}
-                                onChange={(e) => setEmail(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
-                    <div className="space-y-2">
-                        <label className="text-xs font-bold text-text-muted uppercase tracking-wider ml-1">Password</label>
-                        <div className="relative">
-                            <Lock className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={18} />
-                            <input
-                                required
-                                type="password"
-                                placeholder="••••••••"
-                                className="pl-12"
-                                value={password}
-                                onChange={(e) => setPassword(e.target.value)}
-                            />
-                        </div>
-                    </div>
-
+                <div className="space-y-6">
                     <button
-                        type="submit"
+                        onClick={handleGoogleLogin}
                         disabled={loading}
-                        className="btn-primary w-full py-4 mt-4 font-bold text-lg group relative overflow-hidden"
+                        className="w-full h-14 bg-white hover:bg-slate-50 text-slate-900 font-bold rounded-2xl flex items-center justify-center gap-4 transition-all hover:scale-[1.02] active:scale-95 shadow-xl shadow-white/5 border border-slate-200 group"
                     >
                         {loading ? (
-                            <Loader2 className="animate-spin" size={24} />
+                            <Loader2 className="animate-spin text-primary" size={24} />
                         ) : (
                             <>
-                                {isLogin ? 'Sign In' : 'Create Account'}
-                                <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                                <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" className="w-6 h-6" />
+                                <span>Continue with Google</span>
                             </>
                         )}
                     </button>
-                </form>
 
-                <div className="mt-8 text-center">
-                    <p className="text-text-muted text-sm">
-                        {isLogin ? "Don't have an account?" : "Already have an account?"}
-                        <button
-                            onClick={() => {
-                                setIsLogin(!isLogin);
-                                setError('');
-                            }}
-                            className="ml-2 text-primary font-bold hover:underline"
-                        >
-                            {isLogin ? 'Sign Up' : 'Log In'}
-                        </button>
+                    <p className="text-[10px] text-text-muted uppercase tracking-[0.2em] font-bold">
+                        Secure University Access
+                    </p>
+                </div>
+
+                <div className="mt-12 pt-8 border-t border-glass-border">
+                    <p className="text-text-muted text-xs leading-relaxed">
+                        By continuing, you agree to share your name and email with QudahSpot.
                     </p>
                 </div>
             </motion.div>

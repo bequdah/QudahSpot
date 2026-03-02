@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { db, auth } from '../firebase';
+import { db, auth, googleProvider } from '../firebase';
 import {
     collection,
     addDoc,
@@ -16,7 +16,8 @@ import {
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signOut,
-    updateProfile
+    updateProfile,
+    signInWithPopup
 } from 'firebase/auth';
 
 const MaterialContext = createContext();
@@ -61,9 +62,14 @@ export const MaterialProvider = ({ children }) => {
         return signInWithEmailAndPassword(auth, email, password);
     };
 
+    const loginWithGoogle = () => {
+        return signInWithPopup(auth, googleProvider);
+    };
+
     const logout = () => {
         return signOut(auth);
     };
+
 
     // Real-time listener for materials
     useEffect(() => {
@@ -144,8 +150,10 @@ export const MaterialProvider = ({ children }) => {
             authLoading,
             signup,
             login,
+            loginWithGoogle,
             logout
         }}>
+
             {children}
         </MaterialContext.Provider>
     );
