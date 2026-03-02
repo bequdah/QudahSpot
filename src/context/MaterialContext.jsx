@@ -28,24 +28,13 @@ export const MaterialProvider = ({ children }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [authLoading, setAuthLoading] = useState(true);
 
-    const [isAdmin, setIsAdmin] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem('qudahspot_is_admin') === 'true';
-        }
-        return false;
-    });
-
-    const toggleAdmin = (value) => {
-        setIsAdmin(value);
-        if (typeof window !== 'undefined') {
-            localStorage.setItem('qudahspot_is_admin', value);
-        }
-    };
+    const [isAdmin, setIsAdmin] = useState(false);
 
     // Auth state listener
     useEffect(() => {
         const unsubscribe = onAuthStateChanged(auth, (user) => {
             setCurrentUser(user);
+            setIsAdmin(user?.email === 'qudahmohammad36@gmail.com');
             setAuthLoading(false);
         });
         return unsubscribe;
@@ -144,7 +133,6 @@ export const MaterialProvider = ({ children }) => {
             approveMaterial,
             clearAllMaterials,
             isAdmin,
-            toggleAdmin,
             loading,
             currentUser,
             authLoading,

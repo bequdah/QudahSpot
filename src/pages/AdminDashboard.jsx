@@ -3,33 +3,14 @@ import { useMaterials } from '../context/MaterialContext';
 import { Check, Trash2, Shield, Eye, Clock, User, BookOpen, AlertCircle } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
-const ADMIN_PASS = '111';
-
 const AdminDashboard = () => {
-    const { allMaterials, approveMaterial, deleteMaterial, isAdmin, toggleAdmin } = useMaterials();
+    const { allMaterials, approveMaterial, deleteMaterial, isAdmin, authLoading } = useMaterials();
     const [filter, setFilter] = useState('pending');
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
-    const [passcode, setPasscode] = useState('');
-    const [isAuthenticated, setIsAuthenticated] = useState(false);
-    const [error, setError] = useState(false);
 
-    React.useEffect(() => {
-        if (isAuthenticated && !isAdmin) toggleAdmin(true);
-    }, [isAuthenticated, isAdmin, toggleAdmin]);
+    if (authLoading) return <div className="container py-20 text-center font-bold text-text-muted">Authenticating Admin...</div>;
 
-    const handleLogin = (e) => {
-        e.preventDefault();
-        if (passcode === ADMIN_PASS) {
-            setIsAuthenticated(true);
-            setError(false);
-        } else {
-            setError(true);
-            setPasscode('');
-            setTimeout(() => setError(false), 2000);
-        }
-    };
-
-    if (!isAuthenticated) {
+    if (!isAdmin) {
         return (
             <div className="min-h-[70vh] flex items-center justify-center p-4">
                 <motion.div
@@ -37,38 +18,23 @@ const AdminDashboard = () => {
                     animate={{ opacity: 1, scale: 1 }}
                     className="card max-w-md w-full p-12 text-center relative overflow-hidden"
                 >
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary/50 via-primary to-primary/50" />
-                    <div className="w-20 h-20 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8 text-primary border border-primary/20 shadow-2xl shadow-primary/20">
-                        <Shield size={40} />
+                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500/50 via-rose-500 to-rose-500/50" />
+                    <div className="w-20 h-20 bg-rose-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 text-rose-500 border border-rose-500/20 shadow-2xl shadow-rose-500/20">
+                        <AlertCircle size={40} />
                     </div>
-                    <h1 className="text-3xl font-bold mb-3">Admin <span className="text-primary">Portal</span></h1>
-                    <p className="text-text-muted mb-10 text-sm">Enter security passcode to access moderation controls.</p>
-                    <form onSubmit={handleLogin} className="space-y-6">
-                        <div className="relative">
-                            <input
-                                type="password"
-                                placeholder="Passcode"
-                                value={passcode}
-                                onChange={(e) => setPasscode(e.target.value)}
-                                className={`w-full py-4 px-6 text-center text-2xl tracking-[1em] font-black bg-white/5 border-2 rounded-2xl transition-all outline-none ${error ? 'border-rose-500 bg-rose-500/10' : 'border-white/10 focus:border-primary focus:bg-primary/5'
-                                    }`}
-                                autoFocus
-                            />
-                            {error && (
-                                <motion.p
-                                    initial={{ opacity: 0, y: 6 }}
-                                    animate={{ opacity: 1, y: 0 }}
-                                    className="absolute -bottom-6 w-full text-center text-rose-500 text-xs font-bold"
-                                >
-                                    Access Denied. Try again.
-                                </motion.p>
-                            )}
-                        </div>
-                        <button type="submit" className="btn-primary w-full py-4 text-lg font-bold shadow-xl shadow-primary/20">
-                            Authorize Access
-                        </button>
-                    </form>
-                    <p className="mt-10 text-text-muted text-[10px] uppercase tracking-widest">🔐 Secure Session</p>
+                    <h1 className="text-3xl font-bold mb-3 text-white">Access <span className="text-rose-500">Denied</span></h1>
+                    <p className="text-text-muted mb-10 text-sm leading-relaxed">
+                        This area is restricted to administrators. <br />
+                        Please log in with an authorized account.
+                    </p>
+                    <div className="flex flex-col gap-3">
+                        <Link to="/login" className="btn-primary w-full py-4 text-sm font-bold shadow-xl shadow-primary/20 bg-rose-500 hover:bg-rose-600 border-none">
+                            Switch Account
+                        </Link>
+                        <Link to="/" className="text-text-muted hover:text-white text-xs font-bold transition-all underline underline-offset-4">
+                            Return Home
+                        </Link>
+                    </div>
                 </motion.div>
             </div>
         );
