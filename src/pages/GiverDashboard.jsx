@@ -153,7 +153,7 @@ const GiverDashboard = () => {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-text-muted">Sharer Name</label>
+                            <label className="text-sm font-medium text-primary font-bold">Sharer Name ✏️</label>
                             <input
                                 required
                                 placeholder="Your full name"
@@ -163,7 +163,6 @@ const GiverDashboard = () => {
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-text-muted">College / Faculty</label>
-
                             <select
                                 required
                                 value={newMaterial.college}
