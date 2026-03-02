@@ -1,20 +1,18 @@
-import React, { useState } from 'react';
-import { Plus, Trash2, Edit, FileText, Share2, DollarSign, Phone, Instagram, Send, ArrowRight } from 'lucide-react';
+import React, { useState, useEffect } from 'react';
+import { Plus, Trash2, Edit, FileText, Share2, DollarSign, Phone, Instagram, Send, ArrowRight, Lock } from 'lucide-react';
 import { useMaterials } from '../context/MaterialContext';
 import { COLLEGES } from '../data/mockData';
+import { useNavigate, Link } from 'react-router-dom';
+import { motion } from 'framer-motion';
 
 const GiverDashboard = () => {
-    const { allMaterials, addMaterial, updateMaterial, deleteMaterial } = useMaterials();
+    const { allMaterials, addMaterial, updateMaterial, deleteMaterial, currentUser, authLoading } = useMaterials();
+    const navigate = useNavigate();
 
-    // Identity persistence: store the last used name as the current user's name
-    const [userName, setUserName] = useState(() => {
-        if (typeof window !== 'undefined') {
-            return localStorage.getItem('qudahspot_user_name') || 'Ahmed Q.';
-        }
-        return 'Ahmed Q.';
-    });
+    // Reset user identity based on Firebase Auth
+    const userName = currentUser?.displayName || 'Student';
 
-    const materials = allMaterials.filter(m => m.giver === userName);
+    const materials = allMaterials.filter(m => m.userId === currentUser?.uid);
     const [showForm, setShowForm] = useState(false);
     const [editingId, setEditingId] = useState(null);
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
@@ -29,6 +27,43 @@ const GiverDashboard = () => {
         contactType: 'WhatsApp',
         contactValue: ''
     });
+
+    // Update form name when user changes
+    useEffect(() => {
+        if (currentUser) {
+            setNewMaterial(prev => ({ ...prev, giver: currentUser.displayName || 'Student' }));
+        }
+    }, [currentUser]);
+
+    if (authLoading) return <div className="container py-20 text-center text-text-muted">Loading Auth...</div>;
+
+    if (!currentUser) {
+        return (
+            <div className="container py-20">
+                <motion.div
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    className="card max-w-2xl mx-auto py-20 px-12 text-center"
+                >
+                    <div className="w-24 h-24 bg-primary/10 rounded-3xl flex items-center justify-center mx-auto mb-8 text-primary shadow-2xl shadow-primary/20">
+                        <Lock size={48} />
+                    </div>
+                    <h1 className="text-4xl font-bold mb-4 tracking-tight">Login to <span className="text-primary">Share</span></h1>
+                    <p className="text-xl text-text-muted mb-12">
+                        To maintain a safe and quality environment, only registered students can post materials.
+                    </p>
+                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                        <Link to="/login" className="btn-primary py-4 px-10 text-lg">
+                            Log In / Sign Up
+                        </Link>
+                        <Link to="/browse" className="btn-secondary py-4 px-10 text-lg">
+                            Keep Browsing
+                        </Link>
+                    </div>
+                </motion.div>
+            </div>
+        );
+    }
 
     const resetForm = () => {
         setShowForm(false);

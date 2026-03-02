@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
-import { db } from '../firebase';
+import { db, auth } from '../firebase';
 import {
     collection,
     addDoc,
@@ -11,12 +11,21 @@ import {
     orderBy,
     serverTimestamp
 } from 'firebase/firestore';
+import {
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signOut,
+    updateProfile
+} from 'firebase/auth';
 
 const MaterialContext = createContext();
 
 export const MaterialProvider = ({ children }) => {
     const [allMaterials, setAllMaterials] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [currentUser, setCurrentUser] = useState(null);
+    const [authLoading, setAuthLoading] = useState(true);
 
     const [isAdmin, setIsAdmin] = useState(() => {
         if (typeof window !== 'undefined') {
@@ -30,6 +39,30 @@ export const MaterialProvider = ({ children }) => {
         if (typeof window !== 'undefined') {
             localStorage.setItem('qudahspot_is_admin', value);
         }
+    };
+
+    // Auth state listener
+    useEffect(() => {
+        const unsubscribe = onAuthStateChanged(auth, (user) => {
+            setCurrentUser(user);
+            setAuthLoading(false);
+        });
+        return unsubscribe;
+    }, []);
+
+    // Auth methods
+    const signup = async (email, password, displayName) => {
+        const res = await createUserWithEmailAndPassword(auth, email, password);
+        await updateProfile(res.user, { displayName });
+        return res;
+    };
+
+    const login = (email, password) => {
+        return signInWithEmailAndPassword(auth, email, password);
+    };
+
+    const logout = () => {
+        return signOut(auth);
     };
 
     // Real-time listener for materials
@@ -56,7 +89,8 @@ export const MaterialProvider = ({ children }) => {
             const materialWithStatus = {
                 ...newMaterial,
                 approved: false,
-                createdAt: serverTimestamp()
+                createdAt: serverTimestamp(),
+                userId: currentUser?.uid || null // Link post to user
             };
             await addDoc(collection(db, "materials"), materialWithStatus);
         } catch (error) {
@@ -92,7 +126,6 @@ export const MaterialProvider = ({ children }) => {
     };
 
     const clearAllMaterials = () => {
-        // This is safe to keep as a UI-only reset if needed, but in Firestore we usually delete individually or use a script
         console.warn("Clear all materials not implemented for Firestore for safety");
     };
 
@@ -106,7 +139,12 @@ export const MaterialProvider = ({ children }) => {
             clearAllMaterials,
             isAdmin,
             toggleAdmin,
-            loading
+            loading,
+            currentUser,
+            authLoading,
+            signup,
+            login,
+            logout
         }}>
             {children}
         </MaterialContext.Provider>

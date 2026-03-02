@@ -5,6 +5,7 @@ import Home from './pages/Home';
 import ReceiverDashboard from './pages/ReceiverDashboard';
 import GiverDashboard from './pages/GiverDashboard';
 import AdminDashboard from './pages/AdminDashboard';
+import Login from './pages/Login';
 import Navbar from './components/Navbar';
 
 // Placeholder for Profile
@@ -39,6 +40,7 @@ function App() {
             <Route path="/browse" element={<ReceiverDashboard />} />
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/profile" element={<Profile />} />
+            <Route path="/login" element={<Login />} />
           </Routes>
         </Layout>
       </Router>

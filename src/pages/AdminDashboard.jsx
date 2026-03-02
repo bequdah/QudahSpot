@@ -135,7 +135,7 @@ const AdminDashboard = () => {
                                                 {material.approved ? 'Approved / Live' : 'Awaiting Review'}
                                             </span>
                                             <span className="text-xs text-text-muted flex items-center gap-1">
-                                                <Clock size={12} /> {new Date(material.id).toLocaleDateString()}
+                                                <Clock size={12} /> {material.createdAt?.toDate ? material.createdAt.toDate().toLocaleDateString() : 'Recently'}
                                             </span>
                                         </div>
 
