@@ -21,7 +21,6 @@ const GiverDashboard = () => {
         title: '',
         giver: userName,
         college: COLLEGES[0],
-        subject: '',
         price: 'Free',
         description: '',
         contactType: 'WhatsApp',
@@ -72,7 +71,6 @@ const GiverDashboard = () => {
             title: '',
             giver: userName,
             college: COLLEGES[0],
-            subject: '',
             price: 'Free',
             description: '',
             contactType: 'WhatsApp',
@@ -115,7 +113,6 @@ const GiverDashboard = () => {
             title: material.title,
             giver: material.giver || userName,
             college: material.college || COLLEGES[0],
-            subject: material.subject,
             price: material.price,
             description: material.description,
             contactType: material.contactType || 'WhatsApp',
@@ -156,15 +153,6 @@ const GiverDashboard = () => {
                             />
                         </div>
                         <div className="space-y-2">
-                            <label className="text-sm font-medium text-text-muted">Sharer Name</label>
-                            <input
-                                required
-                                placeholder="Your full name"
-                                value={newMaterial.giver}
-                                onChange={(e) => setNewMaterial({ ...newMaterial, giver: e.target.value })}
-                            />
-                        </div>
-                        <div className="space-y-2">
                             <label className="text-sm font-medium text-text-muted">College / Faculty</label>
                             <select
                                 required
@@ -173,15 +161,6 @@ const GiverDashboard = () => {
                             >
                                 {COLLEGES.map(c => <option key={c} value={c}>{c}</option>)}
                             </select>
-                        </div>
-                        <div className="space-y-2">
-                            <label className="text-sm font-medium text-text-muted">Course Name / Subject</label>
-                            <input
-                                required
-                                placeholder="e.g. CV, Calculus, AI..."
-                                value={newMaterial.subject}
-                                onChange={(e) => setNewMaterial({ ...newMaterial, subject: e.target.value })}
-                            />
                         </div>
                         <div className="space-y-2">
                             <label className="text-sm font-medium text-text-muted">Price (Free to 1 JOD)</label>
@@ -264,7 +243,7 @@ const GiverDashboard = () => {
                                             <span className={`text-sm font-bold ${material.price === 'Free' ? 'text-green-400' : 'text-primary'}`}>
                                                 {material.price}
                                             </span>
-                                            <div className="text-[10px] text-text-muted font-medium uppercase tracking-wider">{material.subject}</div>
+
                                         </div>
                                     </div>
                                     <p className="text-sm text-text-muted line-clamp-1">{material.description}</p>
