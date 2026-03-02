@@ -40,7 +40,7 @@ const ReceiverDashboard = () => {
     };
 
     return (
-        <div className="container pt-12">
+        <div className="container">
             <div className="flex justify-between items-center mb-10">
                 <div className="relative">
                     <h1 className="text-4xl font-black tracking-tight">Browse <span className="text-primary italic">Material</span></h1>
