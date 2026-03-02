@@ -121,46 +121,33 @@ const ReceiverDashboard = () => {
                                 </div>
                             )}
 
-                            <div className="flex justify-between items-start mb-6">
-                                <div className="w-12 h-12 rounded-2xl bg-primary/10 flex items-center justify-center text-primary group-hover:bg-primary group-hover:text-white transition-all duration-300">
-                                    <BookOpen size={24} />
-                                </div>
-                                <div className="text-right">
-                                    <span className={`text-sm font-bold ${material.price === 'Free' ? 'text-green-400' : 'text-primary'}`}>
-                                        {material.price}
-                                    </span>
-                                </div>
-                            </div>
-
-                            <h3 className="text-xl font-bold mb-2 group-hover:text-primary transition-colors">{material.title}</h3>
-                            <p className="text-text-muted text-sm mb-6 line-clamp-2">{material.description}</p>
-
-                            <div className="space-y-3 mb-8">
-                                <div className="flex items-center gap-2 text-xs font-medium text-text-muted">
+                            {/* Price Badge */}
+                            <div className="flex justify-between items-center mb-4">
+                                <span className={`text-sm font-black px-4 py-1.5 rounded-xl ${material.price === 'Free' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-primary/10 text-primary border border-primary/20'}`}>
+                                    {material.price}
+                                </span>
+                                <div className="flex items-center gap-2 text-xs font-bold text-text-muted bg-white/5 px-3 py-1.5 rounded-lg">
                                     <GraduationCap size={14} className="text-primary" />
-                                    <span>{material.college}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs font-medium text-text-muted">
-                                    <FileText size={14} className="text-primary" />
-                                    <span>{material.subject}</span>
-                                </div>
-                                <div className="flex items-center gap-2 text-xs font-medium text-text-muted">
-                                    <MessageSquare size={14} className="text-primary" />
-                                    <span>Owner: {material.giver}</span>
+                                    {material.college}
                                 </div>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row gap-3">
-                                <a
-                                    href={getContactLink(material)}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="btn-primary flex-grow text-sm py-4 rounded-xl flex items-center justify-center gap-3 active:scale-95"
-                                >
-                                    {material.contactType === 'WhatsApp' ? <Phone size={18} /> : <Instagram size={18} />}
-                                    Contact via {material.contactType}
-                                </a>
-                            </div>
+                            {/* Material Name */}
+                            <h3 className="text-xl font-black mb-2 group-hover:text-primary transition-colors leading-tight">{material.title}</h3>
+
+                            {/* Description */}
+                            <p className="text-text-muted text-sm mb-6 line-clamp-3 leading-relaxed">{material.description}</p>
+
+                            {/* Contact Button */}
+                            <a
+                                href={getContactLink(material)}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="btn-primary w-full text-sm py-4 rounded-xl flex items-center justify-center gap-3 active:scale-95 font-bold"
+                            >
+                                {material.contactType === 'WhatsApp' ? <Phone size={18} /> : <Instagram size={18} />}
+                                Contact via {material.contactType}
+                            </a>
                         </motion.div>
                     ))}
                 </AnimatePresence>
