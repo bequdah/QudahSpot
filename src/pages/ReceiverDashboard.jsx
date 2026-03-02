@@ -133,7 +133,10 @@ const ReceiverDashboard = () => {
                             </div>
 
                             {/* Material Name */}
-                            <h3 className="text-xl font-black mb-2 group-hover:text-primary transition-colors leading-tight">{material.title}</h3>
+                            <h3 className="text-xl font-black mb-1 group-hover:text-primary transition-colors leading-tight">{material.title}</h3>
+
+                            {/* Sharer Name */}
+                            <p className="text-xs font-bold text-primary/70 mb-4">By: {material.giver}</p>
 
                             {/* Description */}
                             <p className="text-text-muted text-sm mb-6 line-clamp-3 leading-relaxed">{material.description}</p>
