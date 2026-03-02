@@ -32,9 +32,9 @@ const Navbar = () => {
 
   return (
     <>
-      <nav className="fixed top-0 left-0 right-0 z-[100] bg-surface/95 backdrop-blur-xl border-b border-white/5">
+      <nav className="fixed top-0 left-0 right-0 z-[100] bg-transparent lg:bg-surface/95 lg:backdrop-blur-xl lg:border-b border-white/5 transition-all">
         <div className="container py-3 h-20 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-3 shrink-0" onClick={() => setIsOpen(false)}>
+          <Link to="/" className="hidden lg:flex items-center gap-3 shrink-0" onClick={() => setIsOpen(false)}>
             <div className="relative w-10 h-10 overflow-hidden rounded-xl border border-white/10 bg-primary/10 shadow-lg leading-none">
               <img src="/qudahspot_logo_icon.png" alt="QudahSpot Logo" className="w-full h-full object-cover" />
             </div>
@@ -75,9 +75,11 @@ const Navbar = () => {
           </div>
 
           {/* Mobile Toggle Button */}
-          <button onClick={toggleMenu} className="lg:hidden w-12 h-12 flex items-center justify-center bg-white/5 rounded-2xl border border-white/10 text-white active:scale-90 transition-all shadow-xl">
-            {isOpen ? <X size={26} /> : <Menu size={26} />}
-          </button>
+          <div className="lg:hidden flex w-full justify-end">
+            <button onClick={toggleMenu} className="w-14 h-14 flex items-center justify-center bg-primary text-white rounded-2xl shadow-2xl shadow-primary/40 active:scale-95 transition-all z-[110]">
+              {isOpen ? <X size={28} /> : <Menu size={28} />}
+            </button>
+          </div>
         </div>
       </nav>
 
@@ -88,7 +90,7 @@ const Navbar = () => {
             {/* Dark Professional Backdrop */}
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} onClick={() => setIsOpen(false)} className="fixed inset-0 bg-black/95 backdrop-blur-sm z-[110] lg:hidden" />
 
-            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 25, stiffness: 200 }} className="fixed top-0 right-0 bottom-0 w-[90%] bg-surface z-[120] lg:hidden border-l border-white/10 p-10 flex flex-col shadow-2xl">
+            <motion.div initial={{ x: '100%' }} animate={{ x: 0 }} exit={{ x: '100%' }} transition={{ type: 'spring', damping: 30, stiffness: 300 }} className="fixed top-0 right-0 bottom-0 w-full bg-surface z-[120] lg:hidden p-10 flex flex-col shadow-2xl overflow-y-auto">
 
               {/* Sidebar Header */}
               <div className="flex justify-between items-center mb-12">
