@@ -21,62 +21,62 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="glass-morphism fixed top-0 left-0 right-0 z-50">
-      <div className="container py-4 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-3 group">
-          <div className="relative w-10 h-10 overflow-hidden rounded-xl border border-white/10 bg-surface shadow-lg transition-transform group-hover:scale-110">
+    <nav className="glass-morphism fixed top-0 left-0 right-0 z-[100] border-b border-white/5">
+      <div className="container py-3 h-20 flex items-center justify-between gap-4">
+        <Link to="/" className="flex items-center gap-2 shrink-0">
+          <div className="relative w-9 h-9 overflow-hidden rounded-xl border border-white/10 bg-surface shadow-lg">
             <img
               src="/qudahspot_logo_icon.png"
               alt="QudahSpot Logo"
               className="w-full h-full object-cover"
             />
           </div>
-          <span className="text-xl font-bold tracking-tight">Qudah<span className="text-indigo-400">Spot</span></span>
+          <span className="text-lg font-bold tracking-tight hidden sm:block">Qudah<span className="text-indigo-400">Spot</span></span>
         </Link>
 
-        {/* Desktop Nav */}
-        <div className="flex items-center gap-8">
-          <div className="hidden md:flex items-center gap-8">
-            {navLinks.map((link) => (
-              <NavLink
-                key={link.path}
-                to={link.path}
-                className={({ isActive }) =>
-                  `flex items-center gap-2 text-sm font-medium transition-colors hover:text-indigo-400 ${isActive ? 'text-indigo-400' : 'text-text-muted'}`
-                }
-              >
-                {link.icon}
-                {link.name}
-              </NavLink>
-            ))}
-          </div>
+        {/* Navigation Links */}
+        <div className="flex items-center bg-white/5 rounded-2xl p-1 px-2 border border-white/5 backdrop-blur-md">
+          {navLinks.map((link) => (
+            <NavLink
+              key={link.path}
+              to={link.path}
+              className={({ isActive }) =>
+                `flex items-center gap-2 px-3 py-2 rounded-xl text-sm font-bold transition-all ${isActive
+                  ? 'bg-primary text-white shadow-lg shadow-primary/20'
+                  : 'text-text-muted hover:text-white'
+                }`
+              }
+            >
+              {link.icon}
+              <span className="hidden md:inline">{link.name}</span>
+            </NavLink>
+          ))}
+        </div>
 
-          <div className="flex items-center gap-4 pl-4 border-l border-glass-border">
-            {currentUser ? (
-              <div className="flex items-center gap-4">
-                <Link to="/profile" className="flex items-center gap-2 text-sm font-bold text-white hover:text-indigo-400 transition-colors">
-                  <div className="w-8 h-8 rounded-full bg-indigo-500/20 flex items-center justify-center text-primary border border-indigo-500/20">
-                    <User size={16} />
-                  </div>
-                  <span className="hidden sm:inline">{currentUser.displayName || 'User'}</span>
-                </Link>
-                <button
-                  onClick={handleLogout}
-                  className="p-2 text-text-muted hover:text-rose-500 hover:bg-rose-500/10 rounded-lg transition-all"
-                  title="Log Out"
-                >
-                  <LogOut size={18} />
-                </button>
-              </div>
-            ) : (
-              <Link
-                to="/login"
-                className="btn-primary py-2 px-5 text-sm flex items-center gap-2"
-              >
-                Login <User size={16} />
+        {/* User Actions */}
+        <div className="flex items-center gap-2 shrink-0">
+          {currentUser ? (
+            <div className="flex items-center gap-1">
+              <Link to="/profile" className="flex items-center justify-center w-10 h-10 rounded-xl bg-primary/10 text-primary border border-primary/20 hover:bg-primary hover:text-white transition-all">
+                <User size={18} />
               </Link>
-            )}
-          </div>
+              <button
+                onClick={handleLogout}
+                className="w-10 h-10 flex items-center justify-center text-text-muted hover:text-rose-500 hover:bg-rose-500/10 rounded-xl transition-all"
+                title="Log Out"
+              >
+                <LogOut size={18} />
+              </button>
+            </div>
+          ) : (
+            <Link
+              to="/login"
+              className="btn-primary py-2 px-4 text-xs font-bold"
+            >
+              <span className="hidden xs:inline">Login</span>
+              <User size={14} className="xs:hidden" />
+            </Link>
+          )}
         </div>
       </div>
     </nav>

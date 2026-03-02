@@ -40,12 +40,16 @@ const ReceiverDashboard = () => {
     };
 
     return (
-        <div className="container">
-            <div className="flex justify-between items-center mb-12">
-                <h1 className="text-3xl font-bold mb-2">Browse <span className="text-primary">Material</span></h1>
+        <div className="container pt-12">
+            <div className="flex justify-between items-center mb-10">
+                <div className="relative">
+                    <h1 className="text-4xl font-black tracking-tight">Browse <span className="text-primary italic">Material</span></h1>
+                    <div className="h-1 w-20 bg-primary rounded-full mt-4" />
+                </div>
                 {isAdmin && (
-                    <div className="bg-primary/10 text-primary text-[10px] font-bold px-3 py-1 rounded-full border border-primary/20 uppercase tracking-widest animate-pulse">
-                        Admin Mode Active
+                    <div className="bg-primary/10 text-primary text-[10px] font-bold px-3 py-1 rounded-lg border border-primary/20 uppercase tracking-widest flex items-center gap-2">
+                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                        Admin
                     </div>
                 )}
             </div>
@@ -146,18 +150,16 @@ const ReceiverDashboard = () => {
                                 </div>
                             </div>
 
-                            <div className="flex gap-3">
+                            <div className="flex flex-col sm:flex-row gap-3">
                                 <a
                                     href={getContactLink(material)}
                                     target="_blank"
                                     rel="noopener noreferrer"
-                                    className="btn-primary flex-grow text-sm py-2"
+                                    className="btn-primary flex-grow text-sm py-4 rounded-xl flex items-center justify-center gap-3 active:scale-95"
                                 >
+                                    {material.contactType === 'WhatsApp' ? <Phone size={18} /> : <Instagram size={18} />}
                                     Contact via {material.contactType}
                                 </a>
-                                <div className="btn-secondary p-2 aspect-square flex items-center justify-center" title={material.contactType}>
-                                    {material.contactType === 'WhatsApp' ? <Phone size={18} /> : <Instagram size={18} />}
-                                </div>
                             </div>
                         </motion.div>
                     ))}
