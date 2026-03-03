@@ -1,55 +1,84 @@
 import React from 'react';
-import { BookOpen, Phone, MapPin, ArrowRight } from 'lucide-react';
+import { ArrowRight, Sparkles, Box, LayoutDashboard } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 
 const Home = () => {
     return (
-        <div className="relative flex flex-col overflow-hidden">
-
-            {/* ── BACKGROUND ── */}
-            <div className="absolute inset-0 -z-10 bg-[#0d1117]">
-                <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-indigo-500/10 blur-[120px] rounded-full" />
-                <div className="absolute bottom-[-10%] right-[-10%] w-[50%] h-[50%] bg-rose-500/5 blur-[120px] rounded-full" />
+        <div className="relative min-h-screen flex flex-col">
+            {/* Ambient Background Effects */}
+            <div className="bg-glow">
+                <div className="glow-1" />
+                <div className="glow-2" />
             </div>
 
-            {/* ── CENTRAL HERO ── */}
-            <section className="container relative z-10 flex flex-col lg:flex-row items-center gap-16 pt-32 pb-20 lg:pt-48 lg:pb-32">
+            {/* Hero Section */}
+            <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
+                <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
 
-                <div className="flex-1 text-center lg:text-left">
-                    <div className="badge mb-8 inline-flex">University Material Exchange</div>
+                    <div className="flex-1 text-center lg:text-left z-10">
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.1 }}
+                            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight mb-8"
+                        >
+                            Give Your Materials <br />
+                            <span className="gradient-text">A Second Life</span>
+                        </motion.h1>
 
-                    <h1 className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.05] tracking-tight mb-8">
-                        Give Your Materials <br />
-                        <span className="gradient-text">A Second Life</span>
-                    </h1>
+                        <motion.p
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.2 }}
+                            className="text-text-muted text-lg md:text-xl mb-12 max-w-2xl lg:mx-0 mx-auto leading-relaxed"
+                        >
+                            The simplest and most sustainable way for students to exchange physical notes, slides, and exam preparation materials.
+                        </motion.p>
 
-                    <p className="text-text-muted text-xl md:text-2xl mb-12 max-w-2xl lg:mx-0 mx-auto opacity-80 italic" style={{ fontFamily: "'Playfair Display', serif", letterSpacing: '0.01em' }}>
-                        The simplest way for students to exchange physical notes, slides, and exams.
-                    </p>
-
-                    <div className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-5">
-                        <Link to="/browse" className="btn-primary px-10 py-4 text-base font-bold">
-                            Browse
-                        </Link>
-                        <Link to="/post" className="btn-secondary px-10 py-4 text-base font-bold">
-                            Post
-                        </Link>
+                        <motion.div
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            transition={{ duration: 0.5, delay: 0.3 }}
+                            className="flex flex-col sm:flex-row items-center justify-center lg:justify-start gap-4"
+                        >
+                            <Link
+                                to="/browse"
+                                className="w-full sm:w-auto px-8 py-4 bg-primary text-white font-bold rounded-2xl shadow-lg shadow-primary/20 flex items-center justify-center gap-2 transition-all hover:-translate-y-1 hover:shadow-primary/30 active:translate-y-0"
+                            >
+                                <Box size={20} />
+                                Browse Materials
+                            </Link>
+                            <Link
+                                to="/post"
+                                className="w-full sm:w-auto px-8 py-4 glass text-white font-bold rounded-2xl flex items-center justify-center gap-2 transition-all hover:bg-white/5"
+                            >
+                                <LayoutDashboard size={20} />
+                                Post Material
+                                <ArrowRight size={18} className="text-text-dim" />
+                            </Link>
+                        </motion.div>
                     </div>
-                </div>
 
-                <div className="flex-1 w-full max-w-2xl animate-fade-in">
-                    <div className="relative group">
-                        <div className="absolute inset-0 bg-indigo-500/20 blur-[60px] rounded-full group-hover:bg-indigo-500/30 transition-colors" />
-                        <img
-                            src="/qudahspot_hero_isometric.png"
-                            alt="QudahSpot Isometric Illustration"
-                            className="relative z-10 w-full h-auto rounded-3xl shadow-2xl border border-white/5 transition-transform group-hover:scale-[1.02] duration-500"
-                        />
-                    </div>
+                    <motion.div
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        transition={{ duration: 0.8, delay: 0.2, ease: "easeOut" }}
+                        className="flex-1 w-full max-w-2xl relative"
+                    >
+                        {/* Decorative background for image */}
+                        <div className="absolute -inset-4 bg-primary/20 rounded-[40px] blur-3xl opacity-20 animate-pulse" />
+
+                        <div className="relative premium-card p-2">
+                            <img
+                                src="/qudahspot_hero_isometric.png"
+                                alt="QudahSpot Dashboard Preview"
+                                className="w-full h-auto rounded-[18px] shadow-2xl"
+                            />
+                        </div>
+                    </motion.div>
                 </div>
             </section>
-
         </div>
     );
 };

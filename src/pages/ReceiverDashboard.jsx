@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Search, Filter, BookOpen, MapPin, Phone, Instagram, ExternalLink, FileText, ArrowRight, GraduationCap, MessageSquare, Trash2 } from 'lucide-react';
+import { Search, Filter, Box, User, Phone, Instagram, Trash2, Sparkles, AlertCircle, GraduationCap, ChevronDown } from 'lucide-react';
 import { useMaterials } from '../context/MaterialContext';
 import { COLLEGES } from '../data/mockData';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -12,161 +12,203 @@ const ReceiverDashboard = () => {
 
     const filteredMaterials = allMaterials.filter(material => {
         const matchesSearch = material.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            material.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            material.subject?.toLowerCase().includes(searchTerm.toLowerCase()) ||
             material.description.toLowerCase().includes(searchTerm.toLowerCase());
 
         const matchesCollege = selectedCollege === 'All' || material.college === selectedCollege;
-        const isApproved = material.approved === true; // Only show approved posts
+        const isApproved = material.approved === true;
 
         return matchesSearch && matchesCollege && isApproved;
     });
 
     const getContactLink = (material) => {
+        const value = material.contactValue.trim();
         if (material.contactType === 'WhatsApp') {
-            let phone = material.contactValue.replace(/\D/g, ''); // Clear non-digits
-
-            // If starts with 07 and 10 digits (Jordan standard)
-            if (phone.startsWith('0') && phone.length === 10) {
-                phone = '962' + phone.substring(1);
-            }
-            // If starts with 7 and 9 digits (local without 0)
-            else if (phone.startsWith('7') && phone.length === 9) {
-                phone = '962' + phone;
-            }
-
+            let phone = value.replace(/\D/g, '');
+            if (phone.startsWith('0') && phone.length === 10) phone = '962' + phone.substring(1);
+            else if (phone.startsWith('7') && phone.length === 9) phone = '962' + phone;
             return `https://wa.me/${phone}`;
         }
-        return `https://instagram.com/${material.contactValue.replace('@', '')}`;
+        return `https://instagram.com/${value.replace('@', '')}`;
     };
 
     return (
-        <div className="container">
-            <div className="flex justify-between items-center mb-10">
-                <div className="relative">
-                    <h1 className="text-4xl font-black tracking-tight">Browse <span className="text-primary italic">Material</span></h1>
-                    <div className="h-1 w-20 bg-primary rounded-full mt-4" />
-                </div>
-                {isAdmin && (
-                    <div className="bg-primary/10 text-primary text-[10px] font-bold px-3 py-1 rounded-lg border border-primary/20 uppercase tracking-widest flex items-center gap-2">
-                        <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
-                        Admin
-                    </div>
-                )}
+        <div className="relative min-h-[90vh] pb-20 px-6">
+            {/* Ambient Background Effects */}
+            <div className="bg-glow">
+                <div className="glow-1" />
+                <div className="glow-2" />
             </div>
 
-            <div className="flex flex-col gap-8 mb-12">
-                <div className="flex flex-col md:flex-row gap-4">
+            <div className="max-w-7xl mx-auto pt-12 md:pt-20">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16 px-2">
+                    <div>
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill mb-4"
+                        >
+                            <Box size={14} className="text-secondary" />
+                            <span className="text-[10px] uppercase tracking-[0.2em] font-black text-secondary">
+                                Marketplace
+                            </span>
+                        </motion.div>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-4xl md:text-6xl font-black tracking-tight"
+                        >
+                            Browse <span className="gradient-text">Materials</span>
+                        </motion.h1>
+                    </div>
+
+                    {isAdmin && (
+                        <div className="flex items-center gap-2 px-4 py-2 bg-primary/10 rounded-xl border border-primary/20 backdrop-blur-md">
+                            <div className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+                            <span className="text-[10px] font-black uppercase tracking-widest text-primary">Admin Access</span>
+                        </div>
+                    )}
+                </div>
+
+                {/* Search & Filter Bar */}
+                <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.1 }}
+                    className="glass p-2 rounded-[24px] mb-12 flex flex-col md:flex-row gap-2 shadow-2xl border border-white/5"
+                >
                     <div className="relative flex-grow">
-                        <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={20} />
+                        <Search className="absolute left-5 top-1/2 -translate-y-1/2 text-text-dim" size={18} />
                         <input
-                            className="pl-12 w-full"
-                            placeholder="Search for subjects, topics, or reviews..."
+                            className="premium-input !pl-14 w-full h-14 border-none bg-transparent text-white placeholder:text-text-dim/50"
+                            placeholder="What material are you looking for?"
                             value={searchTerm}
                             onChange={(e) => setSearchTerm(e.target.value)}
                         />
                     </div>
-                    <div className="relative w-full md:w-64">
-                        <Filter className="absolute left-4 top-1/2 -translate-y-1/2 text-text-muted" size={20} />
+                    <div className="h-px md:h-10 md:w-px bg-white/10 my-2 md:my-auto mx-2" />
+                    <div className="relative min-w-[280px]">
                         <select
-                            className="pl-12 w-full appearance-none"
+                            className="premium-input pl-6 pr-12 w-full h-14 border-none bg-transparent appearance-none cursor-pointer font-bold text-sm"
                             value={selectedCollege}
                             onChange={(e) => setSelectedCollege(e.target.value)}
                         >
-                            <option value="All">All Colleges</option>
+                            <option value="All">All University Colleges</option>
                             {COLLEGES.map(college => (
-                                <option key={college} value={college}>{college}</option>
+                                <option key={college} value={college} className="bg-background">{college}</option>
                             ))}
                         </select>
+                        <ChevronDown className="absolute right-6 top-1/2 -translate-y-1/2 text-text-dim pointer-events-none" size={16} />
                     </div>
-                </div>
-            </div>
+                </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                <AnimatePresence mode='popLayout'>
-                    {filteredMaterials.map((material) => (
-                        <motion.div
-                            layout
-                            initial={{ opacity: 0, scale: 0.9 }}
-                            animate={{ opacity: 1, scale: 1 }}
-                            exit={{ opacity: 0, scale: 0.9 }}
-                            className="card group hover:border-primary/50 transition-all duration-300 relative"
-                            key={material.id}
-                        >
-                            {isAdmin && (
-                                <div className="absolute top-4 right-4 z-50">
-                                    {confirmDeleteId === material.id ? (
-                                        <div className="flex items-center gap-2 bg-rose-500 p-1 rounded-xl animate-fade-in shadow-xl">
-                                            <button
-                                                onClick={(e) => { e.preventDefault(); deleteMaterial(material.id); setConfirmDeleteId(null); }}
-                                                className="bg-white text-rose-500 text-[10px] font-bold px-3 py-2 rounded-lg hover:bg-rose-50"
-                                            >
-                                                SURE? DELETE
-                                            </button>
-                                            <button
-                                                onClick={(e) => { e.preventDefault(); setConfirmDeleteId(null); }}
-                                                className="bg-rose-600 text-white text-[10px] font-bold px-3 py-2 rounded-lg"
-                                            >
-                                                NO
-                                            </button>
-                                        </div>
-                                    ) : (
-                                        <button
-                                            onClick={(e) => { e.preventDefault(); setConfirmDeleteId(material.id); }}
-                                            className="w-10 h-10 bg-rose-500/20 hover:bg-rose-500 text-rose-500 hover:text-white rounded-xl flex items-center justify-center transition-all border border-rose-500/30"
-                                            title="Admin: Delete Post"
-                                        >
-                                            <Trash2 size={18} />
-                                        </button>
-                                    )}
-                                </div>
-                            )}
-
-                            {/* Price Badge */}
-                            <div className="flex justify-between items-center mb-4">
-                                <span className={`text-sm font-black px-4 py-1.5 rounded-xl ${material.price === 'Free' ? 'bg-green-500/10 text-green-400 border border-green-500/20' : 'bg-primary/10 text-primary border border-primary/20'}`}>
-                                    {material.price}
-                                </span>
-                                <div className="flex items-center gap-2 text-xs font-bold text-text-muted bg-white/5 px-3 py-1.5 rounded-lg">
-                                    <GraduationCap size={14} className="text-primary" />
-                                    {material.college}
-                                </div>
-                            </div>
-
-                            {/* Material Name */}
-                            <h3 className="text-xl font-black mb-1 group-hover:text-primary transition-colors leading-tight">{material.title}</h3>
-
-                            {/* Sharer Name */}
-                            <p className="text-xs font-bold text-primary/70 mb-4">By: {material.giver}</p>
-
-                            {/* Description */}
-                            <p className="text-text-muted text-sm mb-6 line-clamp-3 leading-relaxed">{material.description}</p>
-
-                            {/* Contact Info (visible as fallback) */}
-                            <div className="flex items-center gap-2 text-xs text-text-muted bg-white/5 px-4 py-2.5 rounded-xl mb-4 border border-white/5">
-                                {material.contactType === 'WhatsApp' ? <Phone size={14} className="text-primary shrink-0" /> : <Instagram size={14} className="text-primary shrink-0" />}
-                                <span className="font-bold text-white/80 select-all">{material.contactValue}</span>
-                            </div>
-
-                            {/* Contact Button */}
-                            <a
-                                href={getContactLink(material)}
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="btn-primary w-full text-sm py-4 rounded-xl flex items-center justify-center gap-3 active:scale-95 font-bold"
+                {/* Materials Grid */}
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <AnimatePresence mode='popLayout'>
+                        {filteredMaterials.map((material, index) => (
+                            <motion.div
+                                layout
+                                initial={{ opacity: 0, y: 30 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                transition={{ delay: index * 0.05 }}
+                                exit={{ opacity: 0, scale: 0.95 }}
+                                className="premium-card p-8 flex flex-col group relative overflow-hidden transition-all duration-300 border border-white/10"
+                                key={material.id}
                             >
-                                {material.contactType === 'WhatsApp' ? <Phone size={18} /> : <Instagram size={18} />}
-                                Contact via {material.contactType}
-                            </a>
-                        </motion.div>
-                    ))}
-                </AnimatePresence>
+                                {/* Header: Tags */}
+                                <div className="flex justify-between items-center mb-8">
+                                    <div className="flex items-center gap-2 px-3 py-1.5 bg-white/5 rounded-full border border-white/5 backdrop-blur-md">
+                                        <GraduationCap size={14} className="text-secondary shrink-0" />
+                                        <span className="text-[11px] font-black uppercase tracking-widest text-text-dim">
+                                            {material.college}
+                                        </span>
+                                    </div>
+
+                                    <span className={`text-[12px] font-black px-4 py-2 rounded-xl uppercase tracking-widest border shadow-2xl transition-all ${material.price === 'Free'
+                                        ? 'bg-emerald-600 text-white border-emerald-400 shadow-emerald-600/20'
+                                        : 'bg-indigo-600 text-white border-indigo-400 shadow-indigo-600/20'
+                                        }`}>
+                                        {material.price}
+                                    </span>
+                                </div>
+
+                                {/* Content: Balanced Center Layout */}
+                                <div className="flex flex-col items-center text-center mb-8">
+                                    <h3 className="text-3xl font-black leading-tight group-hover:text-primary transition-colors mb-4 line-clamp-2 min-h-[4.5rem] flex items-center">
+                                        {material.title}
+                                    </h3>
+
+                                    <div className="inline-flex items-center gap-2 py-1.5 px-4 bg-white/5 rounded-full border border-white/5 mb-6 group-hover:bg-primary/10 transition-colors">
+                                        <User size={14} className="text-primary" />
+                                        <span className="text-[10px] uppercase font-black tracking-[0.2em] text-text-dim">
+                                            Shared by <span className="text-white">{material.giver}</span>
+                                        </span>
+                                    </div>
+
+                                    <p className="text-text-dim text-sm line-clamp-2 leading-relaxed opacity-80 group-hover:opacity-100 transition-opacity">
+                                        {material.description}
+                                    </p>
+                                </div>
+
+                                {/* Action Area */}
+                                <div className="mt-auto pt-6 border-t border-white/5 relative z-30">
+                                    <a
+                                        href={getContactLink(material)}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                        className={`w-full h-14 rounded-2xl flex items-center justify-center gap-4 transition-all active:scale-[0.97] group/btn shadow-2xl border border-white/10 cursor-pointer ${material.contactType === 'WhatsApp'
+                                            ? 'bg-emerald-500 text-white hover:bg-emerald-600 shadow-emerald-500/20'
+                                            : 'bg-gradient-to-r from-purple-500 to-pink-500 text-white hover:brightness-110 shadow-purple-500/20'
+                                            }`}
+                                    >
+                                        {material.contactType === 'WhatsApp' ? <Phone size={18} /> : <Instagram size={18} />}
+                                        <span className="text-[11px] font-black uppercase tracking-[0.25em]">Get Material Now</span>
+                                        <Sparkles size={18} className="group-hover/btn:rotate-12 transition-transform" />
+                                    </a>
+                                </div>
+
+                                {/* Admin Actions: Corner Hover */}
+                                {isAdmin && (
+                                    <div className="absolute top-3 right-3 opacity-0 group-hover:opacity-100 transition-opacity z-50">
+                                        {confirmDeleteId === material.id ? (
+                                            <div className="flex items-center gap-1 bg-rose-500 p-1 rounded-lg shadow-2xl">
+                                                <button
+                                                    onClick={(e) => { e.preventDefault(); deleteMaterial(material.id); }}
+                                                    className="bg-white text-rose-600 text-[8px] font-black px-2 py-1.5 rounded"
+                                                >CONFIRM</button>
+                                                <button
+                                                    onClick={(e) => { e.preventDefault(); setConfirmDeleteId(null); }}
+                                                    className="text-white text-[8px] font-black px-2 py-1.5"
+                                                >X</button>
+                                            </div>
+                                        ) : (
+                                            <button
+                                                onClick={(e) => { e.preventDefault(); setConfirmDeleteId(material.id); }}
+                                                className="w-10 h-10 rounded-full bg-rose-500/20 text-rose-500 hover:bg-rose-500 hover:text-white transition-all flex items-center justify-center border border-rose-500/20 backdrop-blur-xl"
+                                            >
+                                                <Trash2 size={16} />
+                                            </button>
+                                        )}
+                                    </div>
+                                )}
+                            </motion.div>
+                        ))}
+                    </AnimatePresence>
+                </div>
 
                 {filteredMaterials.length === 0 && (
-                    <div className="col-span-full py-24 text-center glass-morphism rounded-3xl">
-                        <Search size={48} className="mx-auto text-text-muted mb-4 opacity-20" />
-                        <h3 className="text-xl font-bold mb-2">No papers found</h3>
-                        <p className="text-text-muted">Try a different search or subject.</p>
-                    </div>
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="py-32 text-center glass rounded-[40px] mt-12 border border-white/5"
+                    >
+                        <div className="w-24 h-24 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-8 shadow-inner">
+                            <AlertCircle size={48} className="text-text-dim opacity-20" />
+                        </div>
+                        <h3 className="text-3xl font-black mb-3">No results found</h3>
+                        <p className="text-text-dim text-lg">Try adjusting your filters or search keywords.</p>
+                    </motion.div>
                 )}
             </div>
         </div>

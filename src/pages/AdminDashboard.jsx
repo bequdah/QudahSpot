@@ -1,37 +1,47 @@
 import React, { useState } from 'react';
 import { useMaterials } from '../context/MaterialContext';
-import { Check, Trash2, Shield, Eye, Clock, User, BookOpen, AlertCircle } from 'lucide-react';
+import { Check, Trash2, Shield, Eye, Clock, User, Box, AlertCircle, Sparkles, Filter, GraduationCap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
+import { Link } from 'react-router-dom';
 
 const AdminDashboard = () => {
     const { allMaterials, approveMaterial, deleteMaterial, isAdmin, authLoading } = useMaterials();
     const [filter, setFilter] = useState('pending');
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
 
-    if (authLoading) return <div className="container py-20 text-center font-bold text-text-muted">Authenticating Admin...</div>;
+    if (authLoading) return (
+        <div className="min-h-screen flex items-center justify-center">
+            <motion.div animate={{ rotate: 360 }} transition={{ repeat: Infinity, duration: 1, ease: "linear" }}>
+                <Shield className="text-primary" size={40} />
+            </motion.div>
+        </div>
+    );
 
     if (!isAdmin) {
         return (
-            <div className="min-h-[70vh] flex items-center justify-center p-4">
+            <div className="relative min-h-[90vh] flex items-center justify-center p-6 px-6">
+                <div className="bg-glow">
+                    <div className="glow-1" />
+                    <div className="glow-2" />
+                </div>
                 <motion.div
                     initial={{ opacity: 0, scale: 0.9 }}
                     animate={{ opacity: 1, scale: 1 }}
-                    className="card max-w-md w-full p-12 text-center relative overflow-hidden"
+                    className="premium-card max-w-md w-full p-12 text-center relative overflow-hidden"
                 >
-                    <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-rose-500/50 via-rose-500 to-rose-500/50" />
-                    <div className="w-20 h-20 bg-rose-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 text-rose-500 border border-rose-500/20 shadow-2xl shadow-rose-500/20">
-                        <AlertCircle size={40} />
+                    <div className="w-20 h-20 bg-rose-500/10 rounded-3xl flex items-center justify-center mx-auto mb-8 text-rose-500 border border-rose-500/20 shadow-2xl">
+                        <Shield size={40} />
                     </div>
-                    <h1 className="text-3xl font-bold mb-3 text-white">Access <span className="text-rose-500">Denied</span></h1>
+                    <h1 className="text-3xl font-black mb-3 text-white">Access <span className="text-rose-500">Denied</span></h1>
                     <p className="text-text-muted mb-10 text-sm leading-relaxed">
                         This area is restricted to administrators. <br />
                         Please log in with an authorized account.
                     </p>
                     <div className="flex flex-col gap-3">
-                        <Link to="/login" className="btn-primary w-full py-4 text-sm font-bold shadow-xl shadow-primary/20 bg-rose-500 hover:bg-rose-600 border-none">
+                        <Link to="/login" className="px-8 py-4 bg-rose-500 text-white font-bold rounded-2xl hover:bg-rose-600 transition-all shadow-lg shadow-rose-500/20">
                             Switch Account
                         </Link>
-                        <Link to="/" className="text-text-muted hover:text-white text-xs font-bold transition-all underline underline-offset-4">
+                        <Link to="/" className="text-text-dim hover:text-white text-xs font-black uppercase tracking-widest transition-all">
                             Return Home
                         </Link>
                     </div>
@@ -48,127 +58,153 @@ const AdminDashboard = () => {
     const pendingCount = allMaterials.filter(m => !m.approved).length;
 
     return (
-        <div className="container">
-            <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-12">
-                <div>
-                    <h1 className="text-3xl font-bold mb-2 flex items-center gap-3">
-                        <Shield className="text-primary" size={32} />
-                        Admin <span className="text-primary">Moderation</span>
-                    </h1>
-                    <p className="text-text-muted">Review and manage student posts to maintain quality.</p>
-                </div>
-
-                <div className="flex bg-card p-1 rounded-xl border border-white/5">
-                    <button
-                        onClick={() => { setFilter('pending'); setConfirmDeleteId(null); }}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'pending' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-text-muted hover:text-white'}`}
-                    >
-                        Pending ({pendingCount})
-                    </button>
-                    <button
-                        onClick={() => { setFilter('all'); setConfirmDeleteId(null); }}
-                        className={`px-4 py-2 rounded-lg text-sm font-bold transition-all ${filter === 'all' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-text-muted hover:text-white'}`}
-                    >
-                        All Posts
-                    </button>
-                </div>
+        <div className="relative min-h-[90vh] pb-20 px-6">
+            <div className="bg-glow">
+                <div className="glow-1" />
+                <div className="glow-2" />
             </div>
 
-            {displayedMaterials.length === 0 ? (
-                <div className="card text-center py-20 border-dashed border-white/10">
-                    <div className="w-16 h-16 bg-white/5 rounded-full flex items-center justify-center mx-auto mb-6">
-                        <Check className="text-text-muted" size={32} />
+            <div className="max-w-7xl mx-auto pt-12 md:pt-20">
+                {/* Header Section */}
+                <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16">
+                    <div>
+                        <motion.div
+                            initial={{ opacity: 0, x: -20 }}
+                            animate={{ opacity: 1, x: 0 }}
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill mb-4"
+                        >
+                            <Shield size={14} className="text-primary" />
+                            <span className="text-[10px] uppercase tracking-[0.2em] font-black text-primary">
+                                Moderation Control
+                            </span>
+                        </motion.div>
+                        <motion.h1
+                            initial={{ opacity: 0, y: 20 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            className="text-4xl md:text-6xl font-black tracking-tight"
+                        >
+                            Admin <span className="gradient-text">Moderation</span>
+                        </motion.h1>
                     </div>
-                    <h2 className="text-xl font-bold mb-2">Queue is Clear!</h2>
-                    <p className="text-text-muted">No posts currently awaiting moderation.</p>
+
+                    <div className="flex bg-white/5 p-1 rounded-2xl border border-white/5 backdrop-blur-xl">
+                        <button
+                            onClick={() => { setFilter('pending'); setConfirmDeleteId(null); }}
+                            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'pending' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-text-dim hover:text-white'}`}
+                        >
+                            Pending ({pendingCount})
+                        </button>
+                        <button
+                            onClick={() => { setFilter('all'); setConfirmDeleteId(null); }}
+                            className={`px-6 py-2.5 rounded-xl text-xs font-black uppercase tracking-widest transition-all ${filter === 'all' ? 'bg-primary text-white shadow-lg shadow-primary/20' : 'text-text-dim hover:text-white'}`}
+                        >
+                            All Posts
+                        </button>
+                    </div>
                 </div>
-            ) : (
-                <div className="grid grid-cols-1 gap-6">
-                    <AnimatePresence mode='popLayout'>
-                        {displayedMaterials.map((material) => (
-                            <motion.div
-                                layout
-                                initial={{ opacity: 0, y: 20 }}
-                                animate={{ opacity: 1, y: 0 }}
-                                exit={{ opacity: 0, scale: 0.95 }}
-                                key={material.id}
-                                className={`card border-l-4 ${material.approved ? 'border-l-green-500' : 'border-l-amber-500'}`}
-                            >
-                                <div className="flex flex-col lg:flex-row gap-8">
-                                    <div className="flex-grow">
-                                        <div className="flex items-center gap-3 mb-4">
-                                            <span className={`text-[10px] font-bold uppercase tracking-widest px-2 py-1 rounded-md ${material.approved ? 'bg-green-500/10 text-green-500' : 'bg-amber-500/10 text-amber-500'}`}>
-                                                {material.approved ? 'Approved / Live' : 'Awaiting Review'}
+
+                {displayedMaterials.length === 0 ? (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        className="py-24 text-center glass rounded-[32px]"
+                    >
+                        <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6 border border-emerald-500/20">
+                            <Check className="text-emerald-500" size={32} />
+                        </div>
+                        <h2 className="text-2xl font-black mb-2">Queue is Clear!</h2>
+                        <p className="text-text-dim">No posts currently awaiting moderation.</p>
+                    </motion.div>
+                ) : (
+                    <div className="grid grid-cols-1 gap-6">
+                        <AnimatePresence mode='popLayout'>
+                            {displayedMaterials.map((material) => (
+                                <motion.div
+                                    layout
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.95 }}
+                                    key={material.id}
+                                    className={`premium-card p-6 md:p-8 flex flex-col lg:flex-row gap-8 border-l-[6px] ${material.approved ? 'border-l-emerald-500' : 'border-l-amber-500 animate-pulse-slow'}`}
+                                >
+                                    <div className="flex-grow min-w-0">
+                                        <div className="flex flex-wrap items-center gap-3 mb-6">
+                                            <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${material.approved
+                                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                                    : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+                                                }`}>
+                                                {material.approved ? 'Approved' : 'Needs Review'}
                                             </span>
-                                            <span className="text-xs text-text-muted flex items-center gap-1">
-                                                <Clock size={12} /> {material.createdAt?.toDate ? material.createdAt.toDate().toLocaleDateString() : 'Recently'}
+                                            <span className="text-[10px] text-text-dim font-bold flex items-center gap-1.5 px-2">
+                                                <Clock size={12} className="opacity-50" />
+                                                {material.createdAt?.toDate ? material.createdAt.toDate().toLocaleDateString() : 'Recently Posted'}
                                             </span>
                                         </div>
 
-                                        <h3 className="text-2xl font-bold mb-2">{material.title}</h3>
-                                        <p className="text-text-muted mb-6 leading-relaxed">{material.description}</p>
+                                        <h3 className="text-2xl font-black mb-3 truncate">{material.title}</h3>
+                                        <p className="text-text-dim text-sm mb-8 leading-relaxed max-w-3xl pr-4">
+                                            {material.description}
+                                        </p>
 
-                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                                            <div className="bg-white/5 p-3 rounded-xl">
-                                                <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Giver</div>
-                                                <div className="text-sm font-bold flex items-center gap-2"><User size={14} className="text-primary" /> {material.giver}</div>
+                                        <div className="flex flex-wrap gap-3">
+                                            <div className="glass px-4 py-2 rounded-xl flex items-center gap-2">
+                                                <User size={12} className="text-primary" />
+                                                <span className="text-xs font-bold">{material.giver}</span>
                                             </div>
-                                            <div className="bg-white/5 p-3 rounded-xl">
-                                                <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">College</div>
-                                                <div className="text-sm font-bold flex items-center gap-2"><BookOpen size={14} className="text-primary" /> {material.college}</div>
+                                            <div className="glass px-4 py-2 rounded-xl flex items-center gap-2">
+                                                <GraduationCap size={12} className="text-primary" />
+                                                <span className="text-xs font-bold">{material.college}</span>
                                             </div>
-                                            <div className="bg-white/5 p-3 rounded-xl">
-                                                <div className="text-[10px] text-text-muted uppercase tracking-wider mb-1">Price</div>
-                                                <span className="text-sm font-bold text-green-400">{material.price}</span>
+                                            <div className="glass px-4 py-2 rounded-xl flex items-center gap-2">
+                                                <span className="text-xs font-black text-emerald-400">{material.price}</span>
                                             </div>
-                                            <div className="bg-white/5 p-3 rounded-xl text-xs text-text-muted">
-                                                <div className="text-[10px] uppercase tracking-wider mb-1">Contact</div>
-                                                <div className="font-bold text-white">{material.contactType}: {material.contactValue}</div>
+                                            <div className="glass px-4 py-2 rounded-xl flex items-center gap-2 opacity-60">
+                                                <span className="text-[10px] font-black uppercase tracking-widest">{material.contactType}</span>
+                                                <span className="text-xs font-bold">{material.contactValue}</span>
                                             </div>
                                         </div>
                                     </div>
 
-                                    <div className="flex flex-row lg:flex-col gap-3 justify-center lg:pt-8 min-w-[200px] relative z-20 isolate">
+                                    <div className="flex flex-row lg:flex-col gap-3 justify-center items-center lg:items-end min-w-[200px] lg:border-l lg:border-white/5 lg:pl-8 border-t lg:border-t-0 pt-6 lg:pt-0 border-white/5">
                                         {!material.approved && (
                                             <button
                                                 onClick={() => approveMaterial(material.id)}
-                                                className="flex-grow bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-6 rounded-xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-green-500/20"
+                                                className="flex-grow w-full bg-emerald-500 hover:bg-emerald-600 text-white font-black py-4 px-8 rounded-2xl flex items-center justify-center gap-2 transition-all shadow-lg shadow-emerald-500/20 active:scale-95"
                                             >
                                                 <Check size={20} /> Approve Post
                                             </button>
                                         )}
 
                                         {confirmDeleteId === material.id ? (
-                                            <div className="flex items-center gap-2 bg-rose-500/10 p-1 rounded-xl animate-fade-in border border-rose-500/20">
-                                                <span className="text-[10px] font-bold text-rose-500 px-3 uppercase tracking-tighter">Sure?</span>
+                                            <div className="flex items-center gap-1 bg-rose-500 p-1 rounded-2xl shadow-xl animate-fade-in w-full">
                                                 <button
-                                                    onClick={(e) => { e.stopPropagation(); deleteMaterial(material.id); setConfirmDeleteId(null); }}
-                                                    className="bg-rose-500 text-white text-[10px] font-bold px-3 py-2 rounded-lg hover:bg-rose-600 transition-colors"
+                                                    onClick={(e) => { e.stopPropagation(); deleteMaterial(material.id); }}
+                                                    className="bg-white text-rose-600 text-[10px] font-black px-4 py-3 rounded-xl flex-grow"
                                                 >
-                                                    YES
+                                                    CONFIRM DELETE
                                                 </button>
                                                 <button
                                                     onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(null); }}
-                                                    className="bg-white/10 text-white text-[10px] font-bold px-3 py-2 rounded-lg hover:bg-white/20 transition-colors"
+                                                    className="text-white px-4 font-black"
                                                 >
-                                                    NO
+                                                    X
                                                 </button>
                                             </div>
                                         ) : (
                                             <button
                                                 onClick={(e) => { e.stopPropagation(); setConfirmDeleteId(material.id); }}
-                                                className="flex-grow bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white font-bold py-3 px-6 rounded-xl border border-rose-500/20 flex items-center justify-center gap-2 transition-all"
+                                                className="flex-grow w-full bg-rose-500/10 hover:bg-rose-500 text-rose-500 hover:text-white font-black py-4 px-8 rounded-2xl border border-rose-500/20 flex items-center justify-center gap-2 transition-all active:scale-95"
                                             >
-                                                <Trash2 size={20} /> {material.approved ? 'Delete Post' : 'Reject & Delete'}
+                                                <Trash2 size={20} /> {material.approved ? 'Remove' : 'Reject'}
                                             </button>
                                         )}
                                     </div>
-                                </div>
-                            </motion.div>
-                        ))}
-                    </AnimatePresence>
-                </div>
-            )}
+                                </motion.div>
+                            ))}
+                        </AnimatePresence>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
