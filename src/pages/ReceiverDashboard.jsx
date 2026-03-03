@@ -29,24 +29,28 @@ const ReceiverDashboard = () => {
     const hasMore = visibleCount < filteredMaterials.length;
 
     useEffect(() => {
+        const currentTarget = observerTarget.current;
+        if (!currentTarget) return;
+
         const observer = new IntersectionObserver(
             entries => {
-                if (entries[0].isIntersecting && hasMore) {
-                    // Small delay to make it feel smoother
-                    setTimeout(() => {
-                        setVisibleCount(prev => prev + 15);
-                    }, 300);
+                const entry = entries[0];
+                if (entry.isIntersecting && hasMore) {
+                    setVisibleCount(prev => prev + 15);
                 }
             },
-            { threshold: 1.0 }
+            {
+                threshold: 0.1,
+                rootMargin: '100px' // Start loading before reaching the very bottom
+            }
         );
 
-        if (observerTarget.current) {
-            observer.observe(observerTarget.current);
-        }
+        observer.observe(currentTarget);
 
-        return () => observer.disconnect();
-    }, [hasMore, visibleCount, filteredMaterials.length]);
+        return () => {
+            if (currentTarget) observer.unobserve(currentTarget);
+        };
+    }, [hasMore, visibleCount]); // Re-run when visibleCount updates to re-track the new position of the target
 
     // Reset visible count when search or filter changes
     useEffect(() => {
@@ -220,13 +224,15 @@ const ReceiverDashboard = () => {
                 </div>
 
                 {/* Infinite Scroll Target */}
-                <div ref={observerTarget} className="w-full flex justify-center py-12">
-                    {hasMore && (
+                <div ref={observerTarget} className="w-full h-20 flex justify-center items-center mt-12">
+                    {hasMore ? (
                         <div className="flex flex-col items-center gap-3">
                             <Loader2 className="animate-spin text-primary" size={32} />
                             <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-dim">Loading more materials...</span>
                         </div>
-                    )}
+                    ) : filteredMaterials.length > 0 ? (
+                        <p className="text-[10px] font-black uppercase tracking-[0.2em] text-text-dim opacity-40">You've reached the end</p>
+                    ) : null}
                 </div>
 
                 {filteredMaterials.length === 0 && (
