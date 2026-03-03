@@ -44,16 +44,6 @@ const ReceiverDashboard = () => {
                 {/* Header Section */}
                 <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-16 px-2">
                     <div>
-                        <motion.div
-                            initial={{ opacity: 0, x: -20 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-full glass-pill mb-4"
-                        >
-                            <Box size={14} className="text-secondary" />
-                            <span className="text-[10px] uppercase tracking-[0.2em] font-black text-secondary">
-                                Marketplace
-                            </span>
-                        </motion.div>
                         <motion.h1
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
