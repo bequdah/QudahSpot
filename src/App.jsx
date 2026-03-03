@@ -6,6 +6,7 @@ import ReceiverDashboard from './pages/ReceiverDashboard';
 import GiverDashboard from './pages/GiverDashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import Login from './pages/Login';
+import LoadTester from './pages/LoadTester';
 import Navbar from './components/Navbar';
 
 // Placeholder for Profile
@@ -41,6 +42,7 @@ function App() {
             <Route path="/admin" element={<AdminDashboard />} />
             <Route path="/profile" element={<Profile />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/tester" element={<LoadTester />} />
           </Routes>
         </Layout>
       </Router>
