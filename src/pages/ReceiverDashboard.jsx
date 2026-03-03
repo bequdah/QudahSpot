@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Search, Filter, Box, User, Phone, Instagram, Trash2, Sparkles, AlertCircle, GraduationCap, ChevronDown } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Search, Filter, Box, User, Phone, Instagram, Trash2, Sparkles, AlertCircle, GraduationCap, ChevronDown, Loader2 } from 'lucide-react';
 import { useMaterials } from '../context/MaterialContext';
 import { COLLEGES } from '../data/mockData';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -9,6 +9,10 @@ const ReceiverDashboard = () => {
     const [searchTerm, setSearchTerm] = useState('');
     const [selectedCollege, setSelectedCollege] = useState('All');
     const [confirmDeleteId, setConfirmDeleteId] = useState(null);
+
+    // Infinite Scroll State
+    const [visibleCount, setVisibleCount] = useState(15);
+    const observerTarget = useRef(null);
 
     const filteredMaterials = allMaterials.filter(material => {
         const matchesSearch = material.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
@@ -20,6 +24,34 @@ const ReceiverDashboard = () => {
 
         return matchesSearch && matchesCollege && isApproved;
     });
+
+    const displayedMaterials = filteredMaterials.slice(0, visibleCount);
+    const hasMore = visibleCount < filteredMaterials.length;
+
+    useEffect(() => {
+        const observer = new IntersectionObserver(
+            entries => {
+                if (entries[0].isIntersecting && hasMore) {
+                    // Small delay to make it feel smoother
+                    setTimeout(() => {
+                        setVisibleCount(prev => prev + 15);
+                    }, 300);
+                }
+            },
+            { threshold: 1.0 }
+        );
+
+        if (observerTarget.current) {
+            observer.observe(observerTarget.current);
+        }
+
+        return () => observer.disconnect();
+    }, [hasMore, visibleCount, filteredMaterials.length]);
+
+    // Reset visible count when search or filter changes
+    useEffect(() => {
+        setVisibleCount(15);
+    }, [searchTerm, selectedCollege]);
 
     const getContactLink = (material) => {
         const value = material.contactValue.trim();
@@ -96,12 +128,12 @@ const ReceiverDashboard = () => {
                 {/* Materials Grid */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <AnimatePresence mode='popLayout'>
-                        {filteredMaterials.map((material, index) => (
+                        {displayedMaterials.map((material, index) => (
                             <motion.div
                                 layout
                                 initial={{ opacity: 0, y: 30 }}
                                 animate={{ opacity: 1, y: 0 }}
-                                transition={{ delay: index * 0.05 }}
+                                transition={{ delay: (index % 15) * 0.05 }}
                                 exit={{ opacity: 0, scale: 0.95 }}
                                 className="premium-card p-8 flex flex-col group relative overflow-hidden transition-all duration-300 border border-white/10"
                                 key={material.id}
@@ -185,6 +217,16 @@ const ReceiverDashboard = () => {
                             </motion.div>
                         ))}
                     </AnimatePresence>
+                </div>
+
+                {/* Infinite Scroll Target */}
+                <div ref={observerTarget} className="w-full flex justify-center py-12">
+                    {hasMore && (
+                        <div className="flex flex-col items-center gap-3">
+                            <Loader2 className="animate-spin text-primary" size={32} />
+                            <span className="text-[10px] font-black uppercase tracking-[0.2em] text-text-dim">Loading more materials...</span>
+                        </div>
+                    )}
                 </div>
 
                 {filteredMaterials.length === 0 && (
