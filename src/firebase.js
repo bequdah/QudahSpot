@@ -1,5 +1,5 @@
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { initializeFirestore } from "firebase/firestore";
 import { getAuth, GoogleAuthProvider } from "firebase/auth";
 
 const firebaseConfig = {
@@ -14,7 +14,12 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-export const db = getFirestore(app);
+
+// Use Long Polling to bypass firewall/WebSocket restrictions on some networks (like university Wi-Fi)
+export const db = initializeFirestore(app, {
+    experimentalForceLongPolling: true,
+});
+
 export const auth = getAuth(app);
 export const googleProvider = new GoogleAuthProvider();
 export default app;
