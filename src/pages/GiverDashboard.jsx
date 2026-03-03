@@ -3,7 +3,7 @@ import { Plus, Trash2, Edit, FileText, Share2, DollarSign, Phone, Instagram, Sen
 import { useMaterials } from '../context/MaterialContext';
 import { COLLEGES } from '../data/mockData';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';//s
 
 const GiverDashboard = () => {
     const { allMaterials, addMaterial, updateMaterial, deleteMaterial, currentUser, authLoading, loginWithGoogle } = useMaterials();
