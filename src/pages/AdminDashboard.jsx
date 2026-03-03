@@ -130,8 +130,8 @@ const AdminDashboard = () => {
                                     <div className="flex-grow min-w-0">
                                         <div className="flex flex-wrap items-center gap-3 mb-6">
                                             <span className={`text-[10px] font-black uppercase tracking-widest px-2.5 py-1 rounded-full border ${material.approved
-                                                    ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
-                                                    : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
+                                                ? 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20'
+                                                : 'bg-amber-500/10 text-amber-500 border-amber-500/20'
                                                 }`}>
                                                 {material.approved ? 'Approved' : 'Needs Review'}
                                             </span>
@@ -154,9 +154,6 @@ const AdminDashboard = () => {
                                             <div className="glass px-4 py-2 rounded-xl flex items-center gap-2">
                                                 <GraduationCap size={12} className="text-primary" />
                                                 <span className="text-xs font-bold">{material.college}</span>
-                                            </div>
-                                            <div className="glass px-4 py-2 rounded-xl flex items-center gap-2">
-                                                <span className="text-xs font-black text-emerald-400">{material.price}</span>
                                             </div>
                                             <div className="glass px-4 py-2 rounded-xl flex items-center gap-2 opacity-60">
                                                 <span className="text-[10px] font-black uppercase tracking-widest">{material.contactType}</span>

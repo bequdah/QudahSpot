@@ -3,7 +3,7 @@ import { Plus, Trash2, Edit, FileText, Share2, DollarSign, Phone, Instagram, Sen
 import { useMaterials } from '../context/MaterialContext';
 import { COLLEGES } from '../data/mockData';
 import { useNavigate, Link } from 'react-router-dom';
-import { motion, AnimatePresence } from 'framer-motion';//s
+import { motion, AnimatePresence } from 'framer-motion';
 
 const GiverDashboard = () => {
     const { allMaterials, addMaterial, updateMaterial, deleteMaterial, currentUser, authLoading, loginWithGoogle } = useMaterials();
@@ -119,7 +119,7 @@ const GiverDashboard = () => {
     const handleAddMaterial = async (e) => {
         e.preventDefault();
         try {
-            let processedMaterial = { ...newMaterial };
+            let processedMaterial = { ...newMaterial, price: 'Free' };
             if (processedMaterial.contactType === 'WhatsApp') {
                 let digits = processedMaterial.contactValue.replace(/\D/g, '');
                 // Basic Jordanian number handling
@@ -239,25 +239,7 @@ const GiverDashboard = () => {
                                         </div>
                                     </div>
                                 </div>
-                                <div className="space-y-4">
-                                    <label className="text-xs font-black uppercase tracking-widest text-text-dim">Price</label>
-                                    <div className="relative">
-                                        <select
-                                            className="premium-input w-full appearance-none cursor-pointer pr-10"
-                                            value={newMaterial.price}
-                                            onChange={(e) => setNewMaterial({ ...newMaterial, price: e.target.value })}
-                                        >
-                                            <option value="Free" className="bg-slate-900">Free / Voluntary</option>
-                                            <option value="0.25 JOD" className="bg-slate-900">0.25 JOD</option>
-                                            <option value="0.50 JOD" className="bg-slate-900">0.50 JOD</option>
-                                            <option value="0.75 JOD" className="bg-slate-900">0.75 JOD</option>
-                                            <option value="1.00 JOD" className="bg-slate-900">1.00 JOD</option>
-                                        </select>
-                                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none text-text-dim">
-                                            <ArrowRight size={16} className="rotate-90" />
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div className="space-y-4 md:col-span-2">
                                     <label className="text-xs font-black uppercase tracking-widest text-text-dim">Contact Information</label>
                                     <div className="flex flex-col sm:flex-row gap-4">
