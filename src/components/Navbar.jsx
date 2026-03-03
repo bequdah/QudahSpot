@@ -38,15 +38,12 @@ const Navbar = () => {
   return (
     <>
       <nav
-        className={`fixed top-0 left-0 right-0 z-[100] transition-all duration-500 px-4 pt-4 ${scrolled ? 'translate-y-0' : 'translate-y-2'
+        className={`sticky top-0 left-0 right-0 z-[100] transition-all duration-300 ${scrolled
+          ? 'bg-background/80 backdrop-blur-lg border-b border-white/10 shadow-lg'
+          : 'bg-background border-b border-transparent'
           }`}
       >
-        <div
-          className={`mx-auto max-w-7xl h-16 flex items-center justify-between px-6 rounded-2xl transition-all duration-500 ${scrolled
-            ? 'glass shadow-xl'
-            : 'bg-transparent border border-transparent'
-            }`}
-        >
+        <div className="mx-auto max-w-7xl h-20 flex items-center justify-between px-6">
           <Link to="/" className="flex items-center gap-3 group" onClick={() => setIsOpen(false)}>
             <div className="relative w-9 h-9 overflow-hidden rounded-xl border border-white/10 bg-primary/20 shadow-lg group-hover:scale-110 transition-transform">
               <img src="/qudahspot_logo_icon.png" alt="Logo" className="w-full h-full object-cover" />

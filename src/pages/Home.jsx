@@ -13,7 +13,7 @@ const Home = () => {
             </div>
 
             {/* Hero Section */}
-            <section className="relative pt-32 pb-20 lg:pt-48 lg:pb-32 px-6">
+            <section className="relative pt-10 pb-20 lg:pt-20 lg:pb-32 px-6">
                 <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-16">
 
                     <div className="flex-1 text-center lg:text-left z-10">
@@ -21,17 +21,16 @@ const Home = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.1 }}
-                            className="text-5xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight mb-8"
+                            className="text-3xl md:text-7xl lg:text-8xl font-black leading-[1.1] tracking-tight mb-8"
                         >
-                            Give Your Materials <br />
-                            <span className="gradient-text">A Second Life</span>
+                            Give Your Materials <span className="gradient-text">A Second Life</span>
                         </motion.h1>
 
                         <motion.p
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.5, delay: 0.2 }}
-                            className="text-text-muted text-lg md:text-xl mb-12 max-w-2xl lg:mx-0 mx-auto leading-relaxed"
+                            className="text-text-muted text-base md:text-xl mb-12 max-w-2xl lg:mx-0 mx-auto leading-relaxed"
                         >
                             The simplest and most sustainable way for students to exchange physical notes, slides, and exam preparation materials.
                         </motion.p>
